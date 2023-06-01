@@ -1,0 +1,8 @@
+[<Your Config Name>]
+host=<Host ex:192.168.1.101>
+port=<Port ex:4567>
+dbname=<Database Name>
+user=<User Name>
+password=<Password>
+
+
