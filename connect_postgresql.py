@@ -1,24 +1,27 @@
 #!/usr/bin/python
 import psycopg2
+
 from config import config_postgresql
+from custom_decorator import timeit
 
 
+@timeit
 def connect():
-    """ Connect to the PostgreSQL database server """
+    """Connect to the PostgreSQL database server"""
     conn = None
     try:
         # read connection parameters
         params = config_postgresql()
         # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
+        print("Connecting to the PostgreSQL database...")
         conn = psycopg2.connect(**params)
 
         # create a cursor
         cur = conn.cursor()
 
         # execute a statement
-        print('PostgreSQL database version:')
-        cur.execute('SELECT version()')
+        print("PostgreSQL database version:")
+        cur.execute("SELECT version()")
 
         # display the PostgreSQL database server version
         db_version = cur.fetchone()
@@ -31,8 +34,8 @@ def connect():
     finally:
         if conn is not None:
             conn.close()
-            print('Database connection closed.')
+            print("Database connection closed.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     connect()
