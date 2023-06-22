@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from configparser import ConfigParser
 
 import psycopg2
@@ -21,7 +20,9 @@ class DatabaseConfig:
             for param in params:
                 db_params[param[0]] = param[1]
         else:
-            raise Exception(f"Section {section} not found in the {self.filename} file")
+            raise AssertionError(
+                f"Section {section} not found in the {self.filename} file"
+            )
         return db_params
 
     def _check_connect_mongodb(self, url: str):
@@ -40,6 +41,7 @@ class DatabaseConfig:
             return True
         except Exception:
             print("Unable to connect to the MongoDB server.")
+            return False
 
     def _check_connect_postgresql(self, url: str):
         """Connect to the PostgreSQL database server"""
@@ -65,6 +67,7 @@ class DatabaseConfig:
             return True
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
+            return False
 
     @property
     def mongodb_url(self):
@@ -75,7 +78,9 @@ class DatabaseConfig:
             + f"@{params['host']}:{params['port']}"
             + "/?authMechanism=DEFAULT"
         )
-        return conn_url
+        if self._check_connect_mongodb(conn_url):
+            return conn_url
+        return None
 
     @property
     def postgresql_url(self):
@@ -92,6 +97,6 @@ class DatabaseConfig:
 
 
 if __name__ == "__main__":
-    import os
-
-    print(os.getenv("user"))
+    db_config = DatabaseConfig("database.ini")
+    print(db_config.postgresql_url)
+    print(db_config.mongodb_url)

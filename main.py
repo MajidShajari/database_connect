@@ -1,12 +1,12 @@
-import connect_mongodb
-import connect_postgresql
 from custom_decorator import timeit
+from database_config import DatabaseConfig
 
 
 @timeit
 def main():
-    connect_postgresql.connect()
-    connect_mongodb.connect()
+    db_config = DatabaseConfig("database.ini")
+    print(db_config.postgresql_url)
+    print(db_config.mongodb_url)
 
 
 if __name__ == "__main__":
